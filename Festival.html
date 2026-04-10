@@ -3,85 +3,201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Festival Score Tracker - Master List</title>
+    <title>Festival Leaderboard Tracker</title>
     <style>
         :root {
-            --bg-dark: #0b0e14;
-            --bg-nav: #11151f;
-            --accent-orange: #ff9100;
-            --accent-green: #2ecc71; /* New vibrant green for checkboxes */
-            --accent-blue: #5c85ff;
-            --text-main: #ffffff;
-            --text-dim: #94a3b8;
-            --border-color: rgba(255, 255, 255, 0.1);
-            --row-bg: rgba(255, 255, 255, 0.03);
-            --row-hover: rgba(255, 255, 255, 0.08);
+            --bg-dark: #07090f;
+            --bg-row: #10131d;
+            --bg-input: #1b1f2e;
+            --border-input: #3a3f55;
+            --text-main: #f0f2f5;
+            --text-dim: #99aab5;
+            
+            --accent-green: #2ecc71; 
+            --orange-vocal: #ff9100;
+            --yellow-bass: #f1c40f;
+            --blue-lead: #87ceeb;
+            --magenta-drums: #ff00ff;
+            
+            --difficulty-blue: #5c85ff;
             --nav-height: 80px;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             background: var(--bg-dark);
             color: var(--text-main);
             margin: 0;
-            display: flex;
-            flex-direction: column;
+            overflow-x: auto;
         }
 
-        /* --- Header: Main Navigation --- */
-        .top-nav {
+        .header-stack {
             position: sticky;
             top: 0;
-            z-index: 3000;
-            background: var(--bg-nav);
+            z-index: 10000;
+            background: var(--bg-dark);
+            min-width: 1400px;
+        }
+
+        .top-nav {
             height: var(--nav-height);
-            padding: 0 30px;
+            padding: 0 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 3px solid var(--accent-orange);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-            box-sizing: border-box;
+            border-bottom: 2px solid var(--accent-green);
         }
 
         .brand h1 {
             margin: 0;
-            font-size: 1.4rem;
+            font-size: 1.6rem;
             text-transform: uppercase;
             letter-spacing: 2px;
-            color: var(--accent-orange);
-            text-shadow: 0 0 12px rgba(255, 145, 0, 0.5);
-        }
-
-        .nav-controls {
-            display: flex;
-            gap: 15px;
-            align-items: center;
+            color: var(--accent-green);
         }
 
         .search-bar {
             background: rgba(0,0,0,0.6);
-            border: 1px solid var(--border-color);
-            padding: 10px 15px;
+            border: 1px solid var(--border-input);
+            padding: 12px 20px;
             border-radius: 8px;
             color: white;
-            width: 250px;
+            width: 300px;
             outline: none;
         }
 
-        .search-bar:focus { border-color: var(--accent-orange); }
-
-        select.sort-dropdown {
-            background: #1a1f2e;
-            color: white;
-            border: 1px solid var(--border-color);
-            padding: 9px;
-            border-radius: 8px;
-            cursor: pointer;
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 320px 80px 120px 50px 50px 120px 50px 50px 120px 50px 50px 120px 50px 50px;
+            width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            box-sizing: border-box;
+            align-items: center;
         }
 
-        .btn-save {
-            background: var(--accent-orange);
+        .grid-header {
+            height: 60px;
+            background: #090c13;
+            border-bottom: 1px solid var(--border-input);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: bold;
+            color: var(--text-dim);
+        }
+
+        .grid-header div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        .list-container {
+            padding: 15px 0 120px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .song-row {
+            background: var(--bg-row);
+            min-height: 75px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .song-row:hover { background: rgba(46, 204, 113, 0.05); }
+
+        .cell { display: flex; justify-content: center; align-items: center; }
+
+        .song-title {
+            justify-content: flex-start !important;
+            color: var(--accent-green) !important;
+            font-weight: bold;
+            font-size: 1.1rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding-left: 10px;
+        }
+
+        input[type="number"] {
+            background: var(--bg-input);
+            border: 2px solid var(--border-input);
+            color: white;
+            width: 100px;
+            padding: 10px 0;
+            text-align: center;
+            border-radius: 25px;
+            outline: none;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            transition: 0.2s;
+            -moz-appearance: textfield;
+        }
+
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[data-inst="v"]:focus { border-color: var(--orange-vocal); }
+        input[data-inst="b"]:focus { border-color: var(--yellow-bass); }
+        input[data-inst="l"]:focus { border-color: var(--blue-lead); }
+        input[data-inst="d"]:focus { border-color: var(--magenta-drums); }
+
+        input[type="checkbox"] {
+            appearance: none;
+            width: 26px;
+            height: 26px;
+            border: 2px solid var(--border-input);
+            border-radius: 50%;
+            cursor: pointer;
+            position: relative;
+            transition: 0.2s;
+        }
+
+        input[type="checkbox"]:checked {
+            background: var(--accent-green);
+            border-color: var(--accent-green);
+        }
+
+        input[type="checkbox"]:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            color: black;
+            font-weight: bold;
+        }
+
+        .diff-tag {
+            background: var(--difficulty-blue);
+            font-weight: bold;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+        }
+
+        .footer-tools {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex; gap: 15px;
+            background: rgba(17, 21, 31, 0.9);
+            padding: 15px 30px;
+            border-radius: 50px;
+            border: 1px solid var(--border-input);
+            backdrop-filter: blur(10px);
+            z-index: 10001;
+        }
+
+        .btn-action {
+            background: var(--accent-green);
             color: black;
             border: none;
             padding: 10px 25px;
@@ -90,208 +206,45 @@
             cursor: pointer;
             text-transform: uppercase;
         }
-
-        /* --- Table Styling --- */
-        .table-wrap {
-            padding: 0 20px 120px 20px;
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0 6px;
-            min-width: 1400px;
-        }
-
-        thead th {
-            position: sticky;
-            top: var(--nav-height);
-            z-index: 2000;
-            background: #1a1f2e;
-            padding: 20px 10px;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 1px;
-            color: var(--text-dim);
-            border-bottom: 2px solid rgba(255,255,255,0.1);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-        }
-
-        tbody tr { background: var(--row-bg); transition: background 0.2s; }
-        tbody tr:hover { background: var(--row-hover); }
-
-        td {
-            padding: 12px 10px;
-            text-align: center;
-            border-top: 1px solid var(--border-color);
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .song-cell {
-            text-align: left;
-            color: var(--accent-orange);
-            font-weight: bold;
-            padding-left: 20px;
-            border-left: 1px solid var(--border-color);
-            border-radius: 12px 0 0 12px;
-            width: 280px;
-        }
-
-        .last-cell {
-            border-right: 1px solid var(--border-color);
-            border-radius: 0 12px 12px 0;
-        }
-
-        /* --- Custom Score Inputs --- */
-        input[type="number"] {
-            background: rgba(0,0,0,0.4);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: var(--accent-orange);
-            width: 90px;
-            padding: 8px;
-            text-align: center;
-            border-radius: 12px; /* Rounded boxes */
-            font-family: 'Courier New', Courier, monospace;
-            outline: none;
-            transition: 0.2s;
-            -moz-appearance: textfield; /* Firefox: Remove arrows */
-        }
-
-        /* Chrome, Safari, Edge: Remove arrows */
-        input[type="number"]::-webkit-outer-spin-button,
-        input[type="number"]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-
-        input[type="number"]:focus {
-            border-color: var(--accent-orange);
-            background: rgba(255, 145, 0, 0.05);
-        }
-
-        /* --- Custom Circular Checkboxes --- */
-        input[type="checkbox"] {
-            appearance: none;
-            -webkit-appearance: none;
-            width: 20px;
-            height: 20px;
-            background: rgba(255,255,255,0.05);
-            border: 2px solid var(--border-color);
-            border-radius: 50%; /* Circle shape */
-            cursor: pointer;
-            position: relative;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            outline: none;
-        }
-
-        input[type="checkbox"]:checked {
-            background: var(--accent-green);
-            border-color: var(--accent-green);
-            box-shadow: 0 0 10px rgba(46, 204, 113, 0.6);
-        }
-
-        input[type="checkbox"]:checked::after {
-            content: '✓';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #000;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .diff-badge {
-            background: var(--accent-blue);
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-weight: bold;
-            font-size: 0.8rem;
-        }
-
-        /* --- Floating Footer --- */
-        .footer-tools {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 15px;
-            background: rgba(17, 21, 31, 0.9);
-            padding: 15px 30px;
-            border-radius: 50px;
-            border: 1px solid var(--border-color);
-            backdrop-filter: blur(15px);
-            z-index: 4000;
-            box-shadow: 0 -5px 25px rgba(0,0,0,0.6);
-        }
-
-        .btn-add {
-            background: transparent;
-            border: 1px solid var(--text-dim);
-            color: white;
-            padding: 8px 18px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.8rem;
-        }
-
-        .btn-add:hover { border-color: white; background: rgba(255,255,255,0.1); }
     </style>
 </head>
 <body>
 
-<div class="top-nav">
-    <div class="brand"><h1>Festival Tracker</h1></div>
-    <div class="nav-controls">
-        <input type="text" id="searchInput" class="search-bar" placeholder="Find a song..." onkeyup="filterSongs()">
-        <select id="sortSelect" class="sort-dropdown" onchange="handleSort()">
-            <option value="alpha-asc">A-Z</option>
-            <option value="alpha-desc">Z-A</option>
-            <option value="vS-desc">High Score: Vocals</option>
-            <option value="bS-desc">High Score: Bass</option>
-            <option value="lS-desc">High Score: Lead</option>
-            <option value="dS-desc">High Score: Drums</option>
-        </select>
-        <button class="btn-save" onclick="saveData()">Save Progress</button>
+<div class="header-stack">
+    <div class="top-nav">
+        <div class="brand"><h1>Festival Tracker</h1></div>
+        <div class="nav-controls">
+            <input type="text" id="searchInput" class="search-bar" placeholder="Search..." onkeyup="filterSongs()">
+            <button class="btn-action" onclick="saveData()">Save Progress</button>
+        </div>
+    </div>
+    <div class="grid-header grid-layout">
+        <div style="justify-content: flex-start; padding-left: 10px;">Song Title</div>
+        <div>Diff</div>
+        <div style="color:var(--orange-vocal)">Vocals</div><div>FC</div><div>PFC</div>
+        <div style="color:var(--yellow-bass)">Bass</div><div>FC</div><div>PFC</div>
+        <div style="color:var(--blue-lead)">Lead</div><div>FC</div><div>PFC</div>
+        <div style="color:var(--magenta-drums)">Drums</div><div>FC</div><div>PFC</div>
     </div>
 </div>
 
-<div class="table-wrap">
-    <table>
-        <thead>
-            <tr>
-                <th class="song-cell">Song</th>
-                <th>Diff</th>
-                <th style="color:#ffaa00">Vocals Score</th><th style="color:#ffaa00">FC</th><th style="color:#ffaa00">PFC</th>
-                <th style="color:#00aaff">Bass Score</th><th style="color:#00aaff">FC</th><th style="color:#00aaff">PFC</th>
-                <th style="color:#ff4444">Lead Score</th><th style="color:#ff4444">FC</th><th style="color:#ff4444">PFC</th>
-                <th style="color:#aa44ff">Drums Score</th><th style="color:#aa44ff">FC</th><th style="color:#aa44ff">PFC</th>
-            </tr>
-        </thead>
-        <tbody id="tableBody"></tbody>
-    </table>
-</div>
+<div class="list-container" id="listContainer"></div>
 
 <div class="footer-tools">
-    <button class="btn-add" onclick="addCustomRows(1)">+1 Entry</button>
-    <button class="btn-add" onclick="addCustomRows(10)">+10 Entries</button>
-    <button class="btn-add" onclick="addCustomRows(100)">+100 Entries</button>
+    <button class="btn-action" style="background:#222; color:white;" onclick="addCustom()">+ Add Song</button>
+    <button class="btn-action" onclick="saveData()">Save All Data</button>
 </div>
 
 <script>
-    const masterSongList = [
-        "2055", "(DON'T FEAR) THE REAPER", "24K MAGIC", "8-BIT BEAT", "8THS", "A BAR SONG", "AAAHH MEN!", "ABC", "ABCDEFU", "ACELERADA", "ADAM'S SONG", "AFRAID", "AFRICA", "AIN'T IT FUN", "AIN'T NO REST FOR THE WICKED", "AIRPLANES", "ALIEN BOY", "ALL EYEZ ON ME", "ALL I DO IS WIN", "ALL I WANT FOR CHRISTMAS IS YOU", "ALL MY PEOPLE", "ALL OF ME (TIESTO REMIX)", "ALL THE GOOD GIRLS GO TO HELL", "ALL THE SMALL THINGS", "ALL THE STARS", "AMERICAN IDIOT", "ANOTHER LIFE", "APPLAUSE", "APPLE", "APT", "ARMED AND DANGEROUS", "AS ALIVE AS YOU NEED ME TO BE", "ASTRONAUT IN THE OCEAN", "BAD GUY", "BAD ROMANCE", "BAILE INOLVIDABLE", "BALLIN'", "BANDIT", "BANG BANG", "BARBARIAN", "BARBIE GIRL", "BASIC BEING BASIC", "BASKET CASE", "BATTERY", "BE SWEET", "BEAUTIFUL", "BEAUTIFUL DAY", "BEAUTIFUL THINGS", "BEAUTY AND A BEAT", "BED CHEM", "BEFORE I FORGET", "BEGGIN'", "BELIEVER", "BEST BUDS", "BEST OF YOU", "BETTER NOW", "BETTER OFF ALONE", "BEYOND THE FLAME", "BIG DAWGS", "BIG ENERGY", "BIG POPPA", "BIRDS OF A FEATHER", "BLACK BEATLES", "BLACK DIAMOND", "BLACK HOLE SUN", "BLAME BRETT", "BLINDING LIGHTS", "BLING BANG BANG BORN", "BLITZKREIG BOP", "BLOODY MARY", "BLOOM", "BLUEBERRY FAYGO", "BONDE DO BRUNAO", "BONES", "BORN THIS WAY", "BOULEVARD OF BROKEN DREAMS", "BOUNCE BACK", "BOUNCIN' BACK", "BOYS A LIAR PT. 2", "BRACE FOR CHAOS", "BREAK FROM TORONTO", "BREAK THE CURSE", "BREAKING ME", "BREED", "BRING ME TO LIFE", "BROCOLLI", "BRUNO-SAN THEME SONG", "BUDDY HOLLY", "BUILT TOGETHER", "BULLS ON PARADE", "BUM BUM", "BUNNY BOUNCE (MURDA BEATZ REMIX)", "BURY A FRIEND", "BUST A MOVE", "BUTTER", "BUTTER BARN HOEDOWN", "C.R.E.A.M (CASH RULES EVERYTHING AROUND ME)", "CAIRO", "CAKE BY THE OCEAN", "CALIFORNICATION", "CALL ME MAYBE", "CAN'T FEEL MY FACE", "CAN'T STOP ME", "CAN'T STOP THE FEELING!", "CANTINA BAND", "CARRY ON MY WAYWARD SON", "CAT'S PROWL", "CELEBRATE HAPPY", "CENTURIES", "CHAMPION", "CHANGE", "CHANGES", "CHEAP THRILLS", "CHEGUEI", "CHERRY CORDIAL", "CHICKEN BANANA", "CHIHIRO", "CHROME DOME", "CHYLD OF DAWN", "CIRCLES", "CLAPPINESS", "CLINT EASTWOOD", "CLOSER - CHAINSMOKERS", "CLOSER - NE-YO", "COME ALIVE", "COME AND GO", "COUNTING STARS", "CRADLES", "CRANK THAT (SOUJA BOY)", "CREATURES OF HEAVEN", "CRIMSON BARONY", "CROWN JAM - LESS FALLIN' LESS BALLIN'", "DAISY 2.0", "DAKITI", "DANCE THERAPY", "DANCING IN THE FLAMES", "DARE", "DARK HORSE", "DASHSTAR* VIP", "DAWN OF A NEW AGE", "DAY 'N' NITE", "DECADE", "DEMONS", "DEXTING", "DIE WITH A SMILE", "DIRTY LITTLE SECRET", "DISEASE", "DOG DAYS ARE OVER", "DON'T CROSS ME", "DON'T LET ME DOWN", "DON'T YOU WORRY CHILD", "DOWN WITH THE SICKNESS", "DRAGULA", "DREAM ON", "DREAMER", "DROP IT LIKE IT'S HOT", "DYNAMITE(BTS)", "DYNAMITE(TAIO CRUZ)", "EARFQUAKE", "EL PALETERO", "ELLA BAILA SOLA", "EMO GIRL", "EMPTY OUT YOUR POCKETS", "END OF THE EARTH", "ENEMY", "ENTER SANDMAN", "ESPRESSO", "EVERLONG", "EVERYBODAY FALLS (CHILL MIX)", "EVERYBODY (BACKSTREET'S BACK)", "EVIL JORDAN", "EYE OF THE STORM", "EYES CLOSED", "FADE TO BLACK", "FAINT", "FANCY FEET (REMIX)", "FAT LIP", "FEATHER", "FEEL GOOD INC", "FEEL IT STILL", "FELL IN LOVE WITH A GIRL", "FELL ON BLACK DAYS", "FIGHTER", "FIND THE FURY", "FIRE AND STEEL", "FIREBALL", "FIREWORK", "FIRST PERSON", "FLICKERING FLAME", "FLOWERS", "FLY", "FOR LATVERIA", "FOR O.X.R.!", "FOR THE NIGHT", "FOR WHOM THE BELL TOLLS", "FREE BIRD", "FRIDAY I'M IN LOVE", "FRIENDLY FIRE", "FROM ME TO U", "FTCU", "FUEL", "FUNNY SONG", "FUTURE BASE", "FUTW (VIXI SOLO VERSION)", "GANGNUM STYLE", "GASOLINA", "GET BUSY", "GET HIM BACK!", "GET JIGGY", "GET LOW", "GET LUCKY", "GHOST", "GHOSTS 'N' STUFF", "GIMME CHOCOLATE!", "GIMME THE LIGHT", "GIVE IT AWAY", "GIVE ME EVERYTHING", "GIVENCHY", "GO GO POWER RANGERS", "GO WITH THE FLOW", "GODZILLA", "GOOD 4 U", "GOOD LUCK, BABE!", "GORGEOUS", "GWENPOOL'S MULTIVERSE", "HAIL TO THE KING", "HAPPIER THAN EVER", "HAPPY (DAY6)", "HAPPY (PHARREL)", "HEAD SHOT / GAS IN THE TRUCK", "HEARTBREAKER", "HEAT WAVES", "HEATHENS", "HEAVY", "HELLO, MORNING", "HEY BROTHER", "HEY YA!", "HIGH HOPES", "HIGHWAY TUNE", "HIPS DON'T LIE", "HOLD ME CLOSER", "HOLIDAY", "HOLLABACK GIRL", "HOT IN HERRE", "HOT TO GO!", "HUMBLE", "HYSTERIA", "I", "I FEEL IT COMING", "I HAD SOME HELP", "I LOVE ROCK N ROLL", "I STILL HAVEN'T FOUND WHAT I'M LOOKING FOR", "I THINK I'M OKAY", "I WANNA GET BETTER", "I WANT IT THAT WAY", "I WISH", "I WRITE SINS NOT TRAGEDIES", "I'M A WINNER", "I'M NOT OKAY (I PROMISE)", "I'M THE VISUAL", "IDOL", "IF U THINK I'M PRETTY", "ILLEGAL", "IN HA MOOD", "IN MY ROOM", "IN THE END", "INDUSTRY BABY", "INFERNO ISLAND", "INFERNO ISLAND (MOLTEN MIX)", "INFINITE HYPE (DJ SKEE REMIX)", "INSANE IN THE BRAIN", "INSTANT CRUSH", "INTERSTATE LOVE SONG", "INTO THE UNDERWORLD", "INTO YOU", "IRIS OUT", "IT TAKES TWO", "JUICY", "JUNO", "JUST A GIRL", "JUST A HOLIDAY IN BATTLEWOOD", "JUST DANCE", "KEEP POPPIN", "KIDS", "KILL BILL", "KILLING IN THE NAME", "KISS ME MORE", "KRYPTONITE", "LA CHONA", "LAPTI NEK", "LARRY'S PLACE", "LAST RESORT (2022)", "LEAN BACK", "LEAN WIT ME", "LEAVE THE DOOR OPEN", "LESS THAN", "LET IT BURN", "LET ME HOLD YOU", "LET YOU DOWN", "LIAR", "LIGHTS, CAMERA, ACTION", "LIKE A G6", "LIKE JENNIE", "LIMITLESS (MURDA BEATZ REMIX)", "LIVIN' LA VIDA LOCA", "LOCKED AND LOADED", "LOCKED OUT OF HEAVEN", "LONELY BOY", "LORD OF THE WASTELAND", "LOSE CONTROL", "LOVE DON'T COST A THING", "LOVIN ON ME", "LUCID DREAMS", "LUNCH", "LUX ÆTERNA", "M@GICAL☆CURE! LOVE SHOT!", "MAGENTA RIDE", "MAGNETIC", "MAKE IT KNOWN", "MAKE THE CROWD ROAR", "MAKE YOU MINE", "MAKEDAMNSURE", "MAMBO NO 5 (A LITTLE BIT OF...)", "MANCHILD", "MAPS", "MARCH OF THE PIGS", "MARY ON A CROSS", "MASTER OF PUPPETS", "ME TOO", "MEET ME IN THE MIDDLE", "MELT", "MEMORIES", "MI GENTTE", "MIA", "MIKU", "MILLION DOLLAR BABY", "MIRAI", "MISERY BUSINESS", "MONA LISA", "MONSTER", "MONTAGEM TOMADA (SLOWED)", "MONTERO (CALL ME BY YOUR NAME)", "MOOD", "MOVE", "MOVE LIKE THE MIST", "MOVE YOU FEET", "MOVES LIKE JAGGER", "MR BRIGHTSIDE", "MUN RA", "MY EX'S BEST FRIEND", "MY HOUSE", "MY OH MY", "MY SONGS KNOW WHAT YOU DID IN THE DARK", "NEVER BACK DOWN", "NEVER GONNA GIVE YOU UP", "NEVER MEANT", "NEW WOMAN", "NEXT SEMESTER", "NIGHT DANCER", "NIGHT ROSE'S SONG", "NIGHTMARE", "NIGHTMARE'S CHOICE", "NO BROKE BOYS", "NO DOUBT", "NO ONE NOTICED", "NO SCRUBS", "NONSENSE", "NOT WITHOUT A FIGHT", "NOTHING ELSE MATTERS", "NOTHING'S ALRIGHT", "NOTORIOUS THUGS", "NUMB", "OCEAN BREEZE BEATS", "OG (FUTURE REMIX)", "OH SHHH...", "OIIA OIIA (SPINNING CAT)", "OKI DOKI", "OLD TOWN ROAD (REMIX)", "ON AND ON (REMIX)", "ON MELANCHOLY HILL", "ON THE FLOOR", "ONE", "ONE MORE TIME", "ORBITAL OVERLOAD", "OVERCOMPENSATE", "OXYTOCIN", "PAINT THE TOWN RED", "PANDA", "PARADISE CITY", "PARADISE PULSE", "PARENTS", "PARTY LIKE A ROCKSTAR", "PARTY ROCK ANTHEM", "PEA LIKE ME", "PICK IT UP (REMIX)", "PINK PONY CLUB", "PLAYERS", "PLEASE PLEASE PLEASE", "POISON", "POKER FACE", "POMPEII", "POPULAR", "POSITIONS", "PPAP (PEN PINEAPPLE APPLE PEN) (LONG VERSION)", "PROBIDA PRA MIM (GRAZON)", "PROVENZA (REMIX)", "PUMP UP THE JAM", "PUMPED UP KICKS", "QLONA", "RADIOACTIVE", "RAIN ON ME", "READY FOR IT", "REDRUM", "REGULATE", "REPEATED STORY", "REPLAY", "RETURN OF THE TIGER", "RIDE", "RIDE THE LIGHTNING", "RIDE WIT ME", "RIGHT ROUND", "RING RING RING", "ROAR", "ROBBERY", "ROCKET MAN", "ROCKSTAR - LISA", "ROSES (IMANBEK REMIX)", "RUBY SOHO", "RUN IT", "RUN IT UP (EPIC GAMES)", "RUN IT UP (HANUMANKIND)", "RUNAMOK", "RUNAWAY", "S.O.M.P", "SABOTAGE", "SAD BUT TRUE", "SANDSTORM", "SANTERIA", "SAVAGE", "SAVE YOUR TEARS", "SAY IT AIN'T SO", "SAY IT PROUD", "SAY SO", "SCARY MONSTERS AND NICE SPRITES", "SCENARIO", "SEEK & DESTROY", "SEPTEMBER", "SEVEN", "SEVEN NATION ARMY", "SEXY AND I KNOW IT", "SEXYBACK", "SHELTER", "SHIVERS", "SHORT SKIRT / LONG JACKET", "SHOW EM (WHAT WE CAN DO)", "SHOW THEM WHO WE ARE", "SIDE TO SIDE", "SILLY BROS", "SINGLE SOON", "SIZZLIN' SUNSHINE", "SKY", "SKY SURFER (NEON RUSH REMIX)", "SLAY!", "SMELLS LIKE TEEN SPIRIT", "SNOW (HEY OH)", "SNOWMIX♪", "SO WHAT", "SOMBODY TOLD ME", "SOMEBODY THAT I USED TO KNOW", "SOMEDAY", "SONG 2", "SORRY", "SOUR 'N SWEET", "SPIES! (MARSHMELLOW REMIX)", "SPIES! (MURDA BEATS REMIX)", "STACY'S MOM", "STAR WARS MAIN THEME / MARCH OF THE RESISTANCE", "STARBOY", "STARGAZING", "STARMAN", "STARSHIPS", "STAY ALTA", "STICK SEASON", "STICKY", "STILL INTO YOU", "STITCHES", "STREETS IGNITE", "STRESSED OUT", "STROBE (RADIO EDIT)", "STRONGER (WHAT DOESN'T KILL YOU)", "STUPID LOVE", "SUCKER", "SUDDENLY I SEE", "SUGAR, WE'RE GOIN DOWN", "SUNFLOWER - SPIDER-MAN: INTO THE SPIDER-VERSE", "SUPER BASS", "SUPER FREAK", "SURROUND SOUND", "SURVIVE THE NIGHT", "SWEET BUT PSYCHO", "SWEET CHILD O'MINE", "SWEET VICTORY - SPONGEBOB", "SWEET VICTORY - EPIC GAMES", "SWIM FREE", "SWITCH UP", "T R A N S P A R E N T S O U L", "TAKANENO HANAKOSAN", "TAKE ME HIGHER", "TAKE MY BREATH", "TAKE ON ME", "TAKE OVER CONTROL", "TASTE", "THAT'S WHAT I LIKE", "THE ABOMINABLE FINKMAN", "THE BOY IS MINE", "THE BOYS ARE BACK IN TOWN", "THE BRAVE", "THE BUSINESS", "THE CLAW", "THE DIARY OF JANE", "THE DINER", "THE EDGE OF GLORY", "THE EMPTINESS MACHINE", "THE FINAL COUNTDOWN", "THE FUTURE ME", "THE GIVER", "THE HAND THAT FEEDS", "THE HILLS", "THE HUNTING GROUND", "THE IMPERIAL MARCH", "THE LAST CAVALLARD", "THE MIDDLE - JIMMY EAT WORLD", "THE MIDDLE - ZEDD", "THE MONORAIL SONG", "THE NIGHT PORTER", "THE NIGHTS", "THE POWER OF LOVE", "THE PRETENDER", "THE SEARCH", "THE SIMPSONS MAIN TITLE THEME", "THE SOUND OF SILENCE", "THE SPINS", "THE UNFORGIVEN", "THE WAY I ARE", "THE WAY LIFE GOES", "THE ZEPHYR SONG", "THEREFORE I AM", "THIS AIN'T A SCENE, IT'S AN ARMS RACE", "THIS IS HOW WE DO IT", "THROUGH THE FIRE AND THE FLAMES", "THUNDER", "TIMELESS", "TITI ME PREGUNTO", "TOO SWEET", "TOUCH THE SUN", "TOXIC", "TOXICITY", "TROPICAL HEAT", "TUBTHUMPING", "TURN UP", "TUSA", "U SHOULD NOT BE DOING THAT", "UNDONE - A SWEATER SONG", "UNHOLY", "UNSAINTED", "UP FROM THE BOTTOM", "UPTOWN FUNK", "VAMPIRE", "WALK EM DOWN", "WALK THIS WAY", "WANNABE - ITZY", "WAY TOO FAST", "WE LIKE TO PARTY! (THE VENGABUS)", "WELCOME HOME", "WELCOME TO PARADISE", "WELCOME TO THE JUNGLE", "WHAT ARE YOU WAITING FOR", "WHAT DO YOU MEAN?", "WHAT I GOT", "WHAT IS LOVE", "WHAT'S MY AGE AGAIN?", "WHAT'S POPPIN", "WHATS NEW SCOOBY-DOO?", "WHEN I COME AROUND", "WHEN I LET THE MUSIC PLAY", "WHENEVER, WHEREVER", "WHERE MY WOOKIES AT?", "WHEREVER I MAY ROAM", "WHINE UP", "WHO", "WHO LET THE DOGS OUT", "WILD ONES (FLO-RIDA)", "WILD ONES (JELLY ROLLS)", "WILDBERRY LILLET", "WINTERFEST WISH", "WISHING WELL", "WITH OR WITHOUT YOU", "WOLVES", "WOMAN", "WORK WORK", "WORLD IS MINE", "WOULD?", "X GON' GIVE IT TO YA", "XO TOUR LLIF3", "YES, AND?", "YORU NI KAKERU", "YOU DON'T KNOW ME", "YOU DON'T KNOW WHAT YOU'VE GOT", "YOU OUGHTA KNOW", "YOU'RE ALL MINE", "YOUNG, WILD & FREE", "YOUNGBLOOD", "YOUR LOVE (9PM)", "YOUR UNIVERSE", "ZOMBIE", "JUST PRETEND", "BEANIE", "CRUISING FOR SELF SOOTHE", "LOVE ME NOT", "SO FAR SO FAKE", "TRIBUTE", "SHY GUY", "STELLAR STELLAR", "BIBBIDIBA", "ALL HAIL THE KING", "MAKE THE FISHSTICK PAY", "LET THE COLD TAKE OVER", "TV OFF", "MOVE (ADAPTED)", "DANCE MACABRE", "I WON'T SAY (I'M IN LOVE)", "ZERO TO HERO", "GABRIELA"
-    ];
+    const masterSongList = ["2055", "(DON'T FEAR) THE REAPER", "24K MAGIC", "8-BIT BEAT", "8THS", "A BAR SONG", "AAAHH MEN!", "ABC", "ABCDEFU", "ACELERADA", "ADAM'S SONG", "AFRAID", "AFRICA", "AIN'T IT FUN", "AIN'T NO REST FOR THE WICKED", "AIRPLANES", "ALIEN BOY", "ALL EYEZ ON ME", "ALL I DO IS WIN", "ALL I WANT FOR CHRISTMAS IS YOU", "ALL MY PEOPLE", "ALL OF ME (TIESTO REMIX)", "ALL THE GOOD GIRLS GO TO HELL", "ALL THE SMALL THINGS", "ALL THE STARS", "AMERICAN IDIOT", "ANOTHER LIFE", "APPLAUSE", "APPLE", "APT", "ARMED AND DANGEROUS", "AS ALIVE AS YOU NEED ME TO BE", "ASTRONAUT IN THE OCEAN", "BAD GUY", "BAD ROMANCE", "BAILE INOLVIDABLE", "BALLIN'", "BANDIT", "BANG BANG", "BARBARIAN", "BARBIE GIRL", "BASIC BEING BASIC", "BASKET CASE", "BATTERY", "BE SWEET", "BEAUTIFUL", "BEAUTIFUL DAY", "BEAUTIFUL THINGS", "BEAUTY AND A BEAT", "BED CHEM", "BEFORE I FORGET", "BEGGIN'", "BELIEVER", "BEST BUDS", "BEST OF YOU", "BETTER NOW", "BETTER OFF ALONE", "BEYOND THE FLAME", "BIG DAWGS", "BIG ENERGY", "BIG POPPA", "BIRDS OF A Feather", "BLACK BEATLES", "BLACK DIAMOND", "BLACK HOLE SUN", "BLAME BRETT", "BLINDING LIGHTS", "BLING BANG BANG BORN", "BLITZKREIG BOP", "BLOODY MARY", "BLOOM", "BLUEBERRY FAYGO", "BONDE DO BRUNAO", "BONES", "BORN THIS WAY", "BOULEVARD OF BROKEN DREAMS", "BOUNCE BACK", "BOUNCIN' BACK", "BOYS A LIAR PT. 2", "BRACE FOR CHAOS", "BREAK FROM TORONTO", "BREAK THE CURSE", "BREAKING ME", "BREED", "BRING ME TO LIFE", "BROCOLLI", "BRUNO-SAN THEME SONG", "BUDDY HOLLY", "BUILT TOGETHER", "BULLS ON PARADE", "BUM BUM", "BUNNY BOUNCE (MURDA BEATZ REMIX)", "BURY A FRIEND", "BUST A MOVE", "BUTTER", "BUTTER BARN HOEDOWN", "C.R.E.A.M", "CAIRO", "CAKE BY THE OCEAN", "CALIFORNICATION", "CALL ME MAYBE", "CAN'T FEEL MY FACE", "CAN'T STOP ME", "CAN'T STOP THE FEELING!", "CANTINA BAND", "CARRY ON MY WAYWARD SON", "CAT'S PROWL", "CELEBRATE HAPPY", "CENTURIES", "CHAMPION", "CHANGE", "CHANGES", "CHEAP THRILLS", "CHEGUEI", "CHERRY CORDIAL", "CHICKEN BANANA", "CHIHIRO", "CHROME DOME", "CHYLD OF DAWN", "CIRCLES", "CLAPPINESS", "CLINT EASTWOOD", "CLOSER - CHAINSMOKERS", "CLOSER - NE-YO", "COME ALIVE", "COME AND GO", "COUNTING STARS", "CRADLES", "CRANK THAT (SOUJA BOY)", "CREATURES OF HEAVEN", "CRIMSON BARONY", "CROWN JAM", "DAISY 2.0", "DAKITI", "DANCE THERAPY", "DANCING IN THE FLAMES", "DARE", "DARK HORSE", "DASHSTAR* VIP", "DAWN OF A NEW AGE", "DAY 'N' NITE", "DECADE", "DEMONS", "DEXTING", "DIE WITH A SMILE", "DIRTY LITTLE SECRET", "DISEASE", "DOG DAYS ARE OVER", "DON'T CROSS ME", "DON'T LET ME DOWN", "DON'T YOU WORRY CHILD", "DOWN WITH THE SICKNESS", "DRAGULA", "DREAM ON", "DREAMER", "DROP IT LIKE IT'S HOT", "DYNAMITE(BTS)", "DYNAMITE(TAIO CRUZ)", "EARFQUAKE", "EL PALETERO", "ELLA BAILA SOLA", "EMO GIRL", "EMPTY OUT YOUR POCKETS", "END OF THE EARTH", "ENEMY", "ENTER SANDMAN", "ESPRESSO", "EVERLONG", "EVERYBODAY FALLS", "EVERYBODY", "EVIL JORDAN", "EYE OF THE STORM", "EYES CLOSED", "FADE TO BLACK", "FAINT", "FANCY FEET", "FAT LIP", "FEATHER", "FEEL GOOD INC", "FEEL IT STILL", "FELL IN LOVE WITH A GIRL", "FELL ON BLACK DAYS", "FIGHTER", "FIND THE FURY", "FIRE AND STEEL", "FIREBALL", "FIREWORK", "FIRST PERSON", "FLICKERING FLAME", "FLOWERS", "FLY", "FOR LATVERIA", "FOR O.X.R.!", "FOR THE NIGHT", "FOR WHOM THE BELL TOLLS", "FREE BIRD", "FRIDAY I'M IN LOVE", "FRIENDLY FIRE", "FROM ME TO U", "FTCU", "FUEL", "FUNNY SONG", "FUTURE BASE", "FUTW", "GANGNUM STYLE", "GASOLINA", "GET BUSY", "GET HIM BACK!", "GET JIGGY", "GET LOW", "GET LUCKY", "GHOST", "GHOSTS 'N' STUFF", "GIMME CHOCOLATE!", "GIMME THE LIGHT", "GIVE IT AWAY", "GIVE ME EVERYTHING", "GIVENCHY", "GO GO POWER RANGERS", "GO WITH THE FLOW", "GODZILLA", "GOOD 4 U", "GOOD LUCK, BABE!", "GORGEOUS", "GWENPOOL'S MULTIVERSE", "HAIL TO THE KING", "HAPPIER THAN EVER", "HAPPY (DAY6)", "HAPPY (PHARREL)", "HEAD SHOT", "HEARTBREAKER", "HEAT WAVES", "HEATHENS", "HEAVY", "HELLO, MORNING", "HEY BROTHER", "HEY YA!", "HIGH HOPES", "HIGHWAY TUNE", "HIPS DON'T LIE", "HOLD ME CLOSER", "HOLIDAY", "HOLLABACK GIRL", "HOT IN HERRE", "HOT TO GO!", "HUMBLE", "HYSTERIA", "I", "I FEEL IT COMING", "I HAD SOME HELP", "I LOVE ROCK N ROLL", "I STILL HAVEN'T FOUND", "I THINK I'M OKAY", "I WANNA GET BETTER", "I WANT IT THAT WAY", "I WISH", "I WRITE SINS NOT TRAGEDIES", "I'M A WINNER", "I'M NOT OKAY", "I'M THE VISUAL", "IDOL", "IF U THINK I'M PRETTY", "ILLEGAL", "IN HA MOOD", "IN MY ROOM", "IN THE END", "INDUSTRY BABY", "INFERNO ISLAND", "INFINITE HYPE", "INSANE IN THE BRAIN", "INSTANT CRUSH", "INTERSTATE LOVE SONG", "INTO THE UNDERWORLD", "INTO YOU", "IRIS OUT", "IT TAKES TWO", "JUICY", "JUNO", "JUST A GIRL", "JUST A HOLIDAY", "JUST DANCE", "KEEP POPPIN", "KIDS", "KILL BILL", "KILLING IN THE NAME", "KISS ME MORE", "KRYPTONITE", "LA CHONA", "LAPTI NEK", "LARRY'S PLACE", "LAST RESORT", "LEAN BACK", "LEAN WIT ME", "LEAVE THE DOOR OPEN", "LESS THAN", "LET IT BURN", "LET ME HOLD YOU", "LET YOU DOWN", "LIAR", "LIGHTS, CAMERA, ACTION", "LIKE A G6", "LIKE JENNIE", "LIMITLESS", "LIVIN' LA VIDA LOCA", "LOCKED AND LOADED", "LOCKED OUT OF HEAVEN", "LONELY BOY", "LORD OF THE WASTELAND", "LOSE CONTROL", "LOVE DON'T COST A THING", "LOVIN ON ME", "LUCID DREAMS", "LUNCH", "LUX ÆTERNA", "M@GICAL☆CURE!", "MAGENTA RIDE", "MAGNETIC", "MAKE IT KNOWN", "MAKE THE CROWD ROAR", "MAKE YOU MINE", "MAKEDAMNSURE", "MAMBO NO 5", "MANCHILD", "MAPS", "MARCH OF THE PIGS", "MARY ON A CROSS", "MASTER OF PUPPETS", "ME TOO", "MEET ME IN THE MIDDLE", "MELT", "MEMORIES", "MI GENTE", "MIA", "MIKU", "MILLION DOLLAR BABY", "MIRAI", "MISERY BUSINESS", "MONA LISA", "MONSTER", "MONTAGEM TOMADA", "MONTERO", "MOOD", "MOVE", "MOVE LIKE THE MIST", "MOVE YOUR FEET", "MOVES LIKE JAGGER", "MR BRIGHTSIDE", "MUN RA", "MY EX'S BEST FRIEND", "MY HOUSE", "MY OH MY", "MY SONGS KNOW", "NEVER BACK DOWN", "NEVER GONNA GIVE YOU UP", "NEVER MEANT", "NEW WOMAN", "NEXT SEMESTER", "NIGHT DANCER", "NIGHT ROSE'S SONG", "NIGHTMARE", "NIGHTMARE'S CHOICE", "NO BROKE BOYS", "NO DOUBT", "NO ONE NOTICED", "NO SCRUBS", "NONSENSE", "NOT WITHOUT A FIGHT", "NOTHING ELSE MATTERS", "NOTHING'S ALRIGHT", "NOTORIOUS THUGS", "NUMB", "OCEAN BREEZE BEATS", "OG", "OH SHHH...", "OIIA OIIA", "OKI DOKI", "OLD TOWN ROAD", "ON AND ON", "ON MELANCHOLY HILL", "ON THE FLOOR", "ONE", "ONE MORE TIME", "ORBITAL OVERLOAD", "OVERCOMPENSATE", "OXYTOCIN", "PAINT THE TOWN RED", "PANDA", "PARADISE CITY", "PARADISE PULSE", "PARENTS", "PARTY LIKE A ROCKSTAR", "PARTY ROCK ANTHEM", "PEA LIKE ME", "PICK IT UP", "PINK PONY CLUB", "PLAYERS", "PLEASE PLEASE PLEASE", "POISON", "POKER FACE", "POMPEII", "POPULAR", "POSITIONS", "PPAP", "PROBIDA PRA MIM", "PROVENZA", "PUMP UP THE JAM", "PUMPED UP KICKS", "QLONA", "RADIOACTIVE", "RAIN ON ME", "READY FOR IT", "REDRUM", "REGULATE", "REPEATED STORY", "REPLAY", "RETURN OF THE TIGER", "RIDE", "RIDE THE LIGHTNING", "RIDE WIT ME", "RIGHT ROUND", "RING RING RING", "ROAR", "ROBBERY", "ROCKET MAN", "ROCKSTAR - LISA", "ROSES", "RUBY SOHO", "RUN IT", "RUN IT UP", "RUNAMOK", "RUNAWAY", "S.O.M.P", "SABOTAGE", "SAD BUT TRUE", "SANDSTORM", "SANTERIA", "SAVAGE", "SAVE YOUR TEARS", "SAY IT AIN'T SO", "SAY IT PROUD", "SAY SO", "SCARY MONSTERS", "SCENARIO", "SEEK & DESTROY", "SEPTEMBER", "SEVEN", "SEVEN NATION ARMY", "SEXY AND I KNOW IT", "SEXYBACK", "SHELTER", "SHIVERS", "SHORT SKIRT / LONG jacket", "SHOW EM", "SHOW THEM WHO WE ARE", "SIDE TO SIDE", "SILLY BROS", "SINGLE SOON", "SIZZLIN' SUNSHINE", "SKY", "SKY SURFER", "SLAY!", "SMELLS LIKE TEEN SPIRIT", "SNOW (HEY OH)", "SNOWMIX♪", "SO WHAT", "SOMBODY TOLD ME", "SOMEBODY THAT I USED TO KNOW", "SOMEDAY", "SONG 2", "SORRY", "SOUR 'N SWEET", "SPIES!", "STACY'S MOM", "STAR WARS MAIN THEME", "STARBOY", "STARGAZING", "STARMAN", "STARSHIPS", "STAY ALIVE", "STICK SEASON", "STICKY", "STILL INTO YOU", "STITCHES", "STREETS IGNITE", "STRESSED OUT", "STROBE", "STRONGER", "STUPID LOVE", "SUCKER", "SUDDENLY I SEE", "SUGAR, WE'RE GOIN DOWN", "SUNFLOWER", "SUPER BASS", "SUPER FREAK", "SURROUND SOUND", "SURVIVE THE NIGHT", "SWEET BUT PSYCHO", "SWEET CHILD O'MINE", "SWEET VICTORY", "SWIM FREE", "SWITCH UP", "T R A N S P A R E N T S O U L", "TAKANENO HANAKOSAN", "TAKE ME HIGHER", "TAKE MY BREATH", "TAKE ON ME", "TAKE OVER CONTROL", "TASTE", "THAT'S WHAT I LIKE", "THE ABOMINABLE FINKMAN", "THE BOY IS MINE", "THE BOYS ARE BACK IN TOWN", "THE BRAVE", "THE BUSINESS", "THE CLAW", "THE DIARY OF JANE", "THE DINER", "THE EDGE OF GLORY", "THE EMPTINESS MACHINE", "THE FINAL COUNTDOWN", "THE FUTURE ME", "THE GIVER", "THE HAND THAT FEEDS", "THE HILLS", "THE HUNTING GROUND", "THE IMPERIAL MARCH", "THE LAST CAVALLARD", "THE MIDDLE", "THE MONORAIL SONG", "THE NIGHT PORTER", "THE NIGHTS", "THE POWER OF LOVE", "THE PRETENDER", "THE SEARCH", "THE SIMPSONS MAIN TITLE THEME", "THE SOUND OF SILENCE", "THE SPINS", "THE UNFORGIVEN", "THE WAY I ARE", "THE WAY LIFE GOES", "THE ZEPHYR SONG", "THEREFORE I AM", "THIS AIN'T A SCENE", "THIS IS HOW WE DO IT", "THROUGH THE FIRE AND THE FLAMES", "THUNDER", "TIMELESS", "TITI ME PREGUNTO", "TOO SWEET", "TOUCH THE SUN", "TOXIC", "TOXICITY", "TROPICAL HEAT", "TUBTHUMPING", "TURN UP", "TUSA", "U SHOULD NOT BE DOING THAT", "UNDONE", "UNHOLY", "UNSAINTED", "UP FROM THE BOTTOM", "UPTOWN FUNK", "VAMPIRE", "WALK EM DOWN", "WALK THIS WAY", "WANNABE - ITZY", "WAY TOO FAST", "WE LIKE TO PARTY!", "WELCOME HOME", "WELCOME TO PARADISE", "WELCOME TO THE JUNGLE", "WHAT ARE YOU WAITING FOR", "WHAT DO YOU MEAN?", "WHAT I GOT", "WHAT IS LOVE", "WHAT'S MY AGE AGAIN?", "WHAT'S POPPIN", "WHATS NEW SCOOBY-DOO?", "WHEN I COME AROUND", "WHEN I LET THE MUSIC PLAY", "WHENEVER, WHEREVER", "WHERE MY WOOKIES AT?", "WHEREVER I MAY ROAM", "WHINE UP", "WHO", "WHO LET THE DOGS OUT", "WILD ONES", "WILDBERRY LILLET", "WINTERFEST WISH", "WISHING WELL", "WITH OR WITHOUT YOU", "WOLVES", "WOMAN", "WORK WORK", "WORLD IS MINE", "WOULD?", "X GON' GIVE IT TO YA", "XO TOUR LLIF3", "YES, AND?", "YORU NI KAKERU", "YOU DON'T KNOW ME", "YOU DON'T KNOW WHAT YOU'VE GOT", "YOU OUGHTA KNOW", "YOU'RE ALL MINE", "YOUNG, WILD & FREE", "YOUNGBLOOD", "YOUR LOVE (9PM)", "YOUR UNIVERSE", "ZOMBIE", "JUST PRETEND", "BEANIE", "CRUISING FOR SELF SOOTHE", "LOVE ME NOT", "SO FAR SO FAKE", "TRIBUTE", "SHY GUY", "STELLAR STELLAR", "BIBBIDIBA", "ALL HAIL THE KING", "MAKE THE FISHSTICK PAY", "LET THE COLD TAKE OVER", "TV OFF", "MOVE (ADAPTED)", "DANCE MACABRE", "I WON'T SAY (I'M IN LOVE)", "ZERO TO HERO", "GABRIELA"];
 
-    const tableBody = document.getElementById('tableBody');
     let currentData = [];
 
     window.onload = () => {
-        const saved = localStorage.getItem('festival_final_data');
+        const saved = localStorage.getItem('festival_vFinal_data');
         if (saved) {
             currentData = JSON.parse(saved);
+            // Ensure any new master list songs are added
             masterSongList.forEach(name => {
                 if (!currentData.find(d => d.song === name)) {
                     currentData.push(createEmptyObj(name));
@@ -300,92 +253,82 @@
         } else {
             currentData = masterSongList.map(name => createEmptyObj(name));
         }
-        
         currentData.sort((a, b) => a.song.localeCompare(b.song));
-        renderTable(currentData);
+        renderList(currentData);
     };
 
     function createEmptyObj(name) {
         return { 
-            song: name, 
-            vS: '', vFC: false, vP: false, 
-            bS: '', bFC: false, bP: false, 
-            lS: '', lFC: false, lP: false, 
+            song: name,
+            vS: '', vFC: false, vP: false,
+            bS: '', bFC: false, bP: false,
+            lS: '', lFC: false, lP: false,
             dS: '', dFC: false, dP: false 
         };
     }
 
-    function renderTable(dataArray) {
-        tableBody.innerHTML = '';
-        dataArray.forEach(data => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td class="song-cell">${data.song}</td>
-                <td><span class="diff-badge">X</span></td>
-                <td><input type="number" value="${data.vS}" data-key="vS"></td>
-                <td><input type="checkbox" ${data.vFC ? 'checked' : ''} data-key="vFC"></td>
-                <td><input type="checkbox" ${data.vP ? 'checked' : ''} data-key="vP"></td>
-                <td><input type="number" value="${data.bS}" data-key="bS"></td>
-                <td><input type="checkbox" ${data.bFC ? 'checked' : ''} data-key="bFC"></td>
-                <td><input type="checkbox" ${data.bP ? 'checked' : ''} data-key="bP"></td>
-                <td><input type="number" value="${data.lS}" data-key="lS"></td>
-                <td><input type="checkbox" ${data.lFC ? 'checked' : ''} data-key="lFC"></td>
-                <td><input type="checkbox" ${data.lP ? 'checked' : ''} data-key="lP"></td>
-                <td><input type="number" value="${data.dS}" data-key="dS"></td>
-                <td><input type="checkbox" ${data.dFC ? 'checked' : ''} data-key="dFC"></td>
-                <td class="last-cell"><input type="checkbox" ${data.dP ? 'checked' : ''} data-key="dP"></td>
+    function renderList(dataArray) {
+        const container = document.getElementById('listContainer');
+        container.innerHTML = '';
+        
+        dataArray.forEach((data) => {
+            const row = document.createElement('div');
+            row.className = 'song-row grid-layout';
+            row.innerHTML = `
+                <div class="cell song-title">${data.song}</div>
+                <div class="cell"><span class="diff-tag">X</span></div>
+                
+                <div class="cell"><input type="number" value="${data.vS}" data-inst="v" data-key="vS"></div>
+                <div class="cell"><input type="checkbox" ${data.vFC ? 'checked' : ''} data-key="vFC"></div>
+                <div class="cell"><input type="checkbox" ${data.vP ? 'checked' : ''} data-key="vP"></div>
+                
+                <div class="cell"><input type="number" value="${data.bS}" data-inst="b" data-key="bS"></div>
+                <div class="cell"><input type="checkbox" ${data.bFC ? 'checked' : ''} data-key="bFC"></div>
+                <div class="cell"><input type="checkbox" ${data.bP ? 'checked' : ''} data-key="bP"></div>
+                
+                <div class="cell"><input type="number" value="${data.lS}" data-inst="l" data-key="lS"></div>
+                <div class="cell"><input type="checkbox" ${data.lFC ? 'checked' : ''} data-key="lFC"></div>
+                <div class="cell"><input type="checkbox" ${data.lP ? 'checked' : ''} data-key="lP"></div>
+                
+                <div class="cell"><input type="number" value="${data.dS}" data-inst="d" data-key="dS"></div>
+                <div class="cell"><input type="checkbox" ${data.dFC ? 'checked' : ''} data-key="dFC"></div>
+                <div class="cell"><input type="checkbox" ${data.dP ? 'checked' : ''} data-key="dP"></div>
             `;
-            tableBody.appendChild(tr);
+            container.appendChild(row);
         });
     }
 
-    function syncCurrentData() {
-        const rows = tableBody.querySelectorAll('tr');
-        currentData = Array.from(rows).map(tr => {
-            const obj = { song: tr.querySelector('.song-cell').innerText };
-            tr.querySelectorAll('input').forEach(input => {
+    function saveData() {
+        const rows = document.querySelectorAll('.song-row');
+        const newData = Array.from(rows).map(row => {
+            const songName = row.querySelector('.song-title').innerText;
+            const obj = { song: songName };
+            row.querySelectorAll('input').forEach(input => {
                 obj[input.dataset.key] = input.type === 'checkbox' ? input.checked : input.value;
             });
             return obj;
         });
-    }
-
-    function handleSort() {
-        syncCurrentData();
-        const criteria = document.getElementById('sortSelect').value;
-        if (criteria === 'alpha-asc') {
-            currentData.sort((a, b) => a.song.localeCompare(b.song));
-        } else if (criteria === 'alpha-desc') {
-            currentData.sort((a, b) => b.song.localeCompare(a.song));
-        } else {
-            const key = criteria.split('-')[0];
-            currentData.sort((a, b) => (Number(b[key]) || 0) - (Number(a[key]) || 0));
-        }
-        renderTable(currentData);
+        localStorage.setItem('festival_vFinal_data', JSON.stringify(newData));
+        alert("Success: Full Library Synchronized!");
     }
 
     function filterSongs() {
         const query = document.getElementById('searchInput').value.toLowerCase();
-        const rows = tableBody.querySelectorAll('tr');
+        const rows = document.querySelectorAll('.song-row');
         rows.forEach(row => {
-            const text = row.querySelector('.song-cell').innerText.toLowerCase();
-            row.style.display = text.includes(query) ? '' : 'none';
+            const title = row.querySelector('.song-title').innerText.toLowerCase();
+            row.style.display = title.includes(query) ? 'grid' : 'none';
         });
     }
 
-    function addCustomRows(n) {
-        for(let i=0; i<n; i++) {
-            currentData.push(createEmptyObj("CUSTOM ENTRY"));
+    function addCustom() {
+        const name = prompt("Enter Song Name:");
+        if (name) {
+            currentData.push(createEmptyObj(name.toUpperCase()));
+            currentData.sort((a, b) => a.song.localeCompare(b.song));
+            renderList(currentData);
         }
-        renderTable(currentData);
-    }
-
-    function saveData() {
-        syncCurrentData();
-        localStorage.setItem('festival_final_data', JSON.stringify(currentData));
-        alert("Success: All data saved locally!");
     }
 </script>
-
 </body>
 </html>
